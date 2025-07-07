@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -20,7 +19,7 @@ public class ItemController {
     private final ItemService itemService;
 
     @GetMapping
-    public ResponseEntity<?> readAll(@RequestParam(required = false) List<Integer> ids) {
+    public ResponseEntity<?> readAll(@RequestParam(name = "id", required = false) List<Integer> ids) {
         log.info("params: {}", ids);
         List<ItemGetRes> items = itemService.findAll(ids);
         return ResponseEntity.ok(items);
