@@ -1,3 +1,7 @@
+constants:
+  file:
+    directory: D:\SQL(04-14~)\backend\springboot\upload
+
 spring:
   application:
     name: gallery
