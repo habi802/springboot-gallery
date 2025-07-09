@@ -2,6 +2,7 @@ package kr.co.wikibook.gallery.cart;
 
 import jakarta.servlet.http.HttpServletRequest;
 import kr.co.wikibook.gallery.account.etc.AccountConstants;
+import kr.co.wikibook.gallery.cart.model.CartDeleteReq;
 import kr.co.wikibook.gallery.cart.model.CartGetRes;
 import kr.co.wikibook.gallery.cart.model.CartPostReq;
 import kr.co.wikibook.gallery.common.util.HttpUtils;
@@ -32,6 +33,14 @@ public class CartController {
     public ResponseEntity<?> findAll(HttpServletRequest httpReq) {
         int logginedMemberId = (int) HttpUtils.getSessionValue(httpReq, AccountConstants.MEMBER_ID_NAME);
         List<CartGetRes> result = cartService.findAll(logginedMemberId);
+        return ResponseEntity.ok(result);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> remove(@ModelAttribute CartDeleteReq req, HttpServletRequest httpReq) {
+        int logginedMemberId = (int) HttpUtils.getSessionValue(httpReq, AccountConstants.MEMBER_ID_NAME);
+        req.setMemberId(logginedMemberId);
+        int result = cartService.remove(req);
         return ResponseEntity.ok(result);
     }
 }

@@ -1,5 +1,6 @@
 package kr.co.wikibook.gallery.cart;
 
+import kr.co.wikibook.gallery.cart.model.CartDeleteReq;
 import kr.co.wikibook.gallery.cart.model.CartGetRes;
 import kr.co.wikibook.gallery.cart.model.CartPostReq;
 import lombok.RequiredArgsConstructor;
@@ -18,5 +19,9 @@ public class CartService {
 
     public List<CartGetRes> findAll(int memberId) {
         return cartMapper.findAllWithItemByMemberId(memberId);
+    }
+
+    public int remove(CartDeleteReq req) {
+        return cartMapper.deleteByMemberIdAndItemId(req);
     }
 }
