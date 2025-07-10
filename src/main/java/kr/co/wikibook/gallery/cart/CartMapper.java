@@ -12,4 +12,5 @@ public interface CartMapper {
     int save(CartPostReq req);
     List<CartGetRes> findAllWithItemByMemberId(int memberId);
     int deleteByCartIdAndMemberId(CartDeleteReq req);
+    int deleteByMemberId(int memberId);
 }

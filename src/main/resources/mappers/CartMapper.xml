@@ -19,4 +19,9 @@
         WHERE id = #{cartId}
         AND member_id = #{memberId}
     </delete>
+
+    <delete id="deleteByMemberId">
+        DELETE FROM carts
+        WHERE member_id = #{memberId}
+    </delete>
 </mapper>
