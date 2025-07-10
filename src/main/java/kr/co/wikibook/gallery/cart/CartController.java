@@ -33,6 +33,7 @@ public class CartController {
     public ResponseEntity<?> findAll(HttpServletRequest httpReq) {
         int logginedMemberId = (int) HttpUtils.getSessionValue(httpReq, AccountConstants.MEMBER_ID_NAME);
         List<CartGetRes> result = cartService.findAll(logginedMemberId);
+        log.info("result: {}", result);
         return ResponseEntity.ok(result);
     }
 
