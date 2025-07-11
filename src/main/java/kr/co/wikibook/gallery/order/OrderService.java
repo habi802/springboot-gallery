@@ -3,6 +3,7 @@ package kr.co.wikibook.gallery.order;
 import kr.co.wikibook.gallery.cart.CartMapper;
 import kr.co.wikibook.gallery.item.ItemMapper;
 import kr.co.wikibook.gallery.item.model.ItemGetRes;
+import kr.co.wikibook.gallery.order.model.OrderGetRes;
 import kr.co.wikibook.gallery.order.model.OrderItemPostDto;
 import kr.co.wikibook.gallery.order.model.OrderPostDto;
 import kr.co.wikibook.gallery.order.model.OrderPostReq;
@@ -56,5 +57,9 @@ public class OrderService {
         cartMapper.deleteByMemberId(logginedMemberId);
 
         return 1;
+    }
+
+    public List<OrderGetRes> findAll(int memberId) {
+        return orderMapper.findAllByMemberIdOrderByIdDesc(memberId);
     }
 }
