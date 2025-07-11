@@ -19,4 +19,11 @@
         WHERE member_id = #{memberId}
         ORDER BY id DESC
     </select>
+
+    <select id="findByOrderIdAndMemberId">
+        SELECT id, name, address, payment, amount, created
+        FROM orders
+        WHERE id = #{orderId}
+        AND member_id = #{memberId}
+    </select>
 </mapper>
