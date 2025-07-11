@@ -1,5 +1,6 @@
 package kr.co.wikibook.gallery.order;
 
+import kr.co.wikibook.gallery.cart.CartMapper;
 import kr.co.wikibook.gallery.item.ItemMapper;
 import kr.co.wikibook.gallery.item.model.ItemGetRes;
 import kr.co.wikibook.gallery.order.model.OrderItemPostDto;
@@ -19,6 +20,7 @@ public class OrderService {
     private final OrderMapper orderMapper;
     private final OrderItemMapper orderItemMapper;
     private final ItemMapper itemMapper;
+    private final CartMapper cartMapper;
 
     @Transactional
     public int saveOrder(OrderPostReq req, int logginedMemberId) {
@@ -45,11 +47,13 @@ public class OrderService {
                 .build();
 
         //log.info("beforeOrderDto:{}", orderDto);
-        int orderResult = orderMapper.save(orderDto);
+        orderMapper.save(orderDto);
         //log.info("afterOrderDto:{}", orderDto);
 
         OrderItemPostDto orderItemDto = new OrderItemPostDto(orderDto.getOrderId(), req.getItemIds());
-        int orderItemResult = orderItemMapper.save(orderItemDto);
+        orderItemMapper.save(orderItemDto);
+
+        cartMapper.deleteByMemberId(logginedMemberId);
 
         return 1;
     }
