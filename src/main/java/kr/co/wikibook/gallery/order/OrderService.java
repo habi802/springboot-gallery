@@ -52,7 +52,9 @@ public class OrderService {
         OrderItemPostDto orderItemDto = new OrderItemPostDto(orderDto.getOrderId(), req.getItemIds());
         orderItemMapper.save(orderItemDto);
 
-        cartMapper.deleteByMemberId(logginedMemberId);
+        if (logginedMemberId != null) {
+            cartMapper.deleteByMemberId(logginedMemberId);
+        }
 
         return 1;
     }
