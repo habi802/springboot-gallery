@@ -21,7 +21,7 @@ public class OrderService {
     private final CartMapper cartMapper;
 
     @Transactional
-    public int saveOrder(OrderPostReq req, int logginedMemberId) {
+    public int saveOrder(OrderPostReq req, Integer logginedMemberId) {
         // 상품 정보 DB로부터 가져온다.
         List<ItemGetRes> itemList = itemMapper.findAllByIdIn(req.getItemIds());
         //log.info("itemList={}", itemList);
@@ -37,6 +37,7 @@ public class OrderService {
 
         OrderPostDto orderDto = OrderPostDto.builder()
                 .memberId(logginedMemberId)
+                .guestId(req.getGuestId())
                 .name(req.getName())
                 .address(req.getAddress())
                 .payment(req.getPayment())
@@ -62,7 +63,7 @@ public class OrderService {
 
     public OrderDetailGetRes detail(OrderDetailGetReq req) {
         OrderDetailGetRes result = orderMapper.findByOrderIdAndMemberId(req);
-        log.info("result:{}", result);
+        //log.info("result:{}", result);
         return result;
     }
 }

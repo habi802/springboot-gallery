@@ -8,6 +8,7 @@ import java.util.List;
 @Getter
 @ToString
 public class OrderPostReq {
+    private String guestId;
     private String name;
     private String address;
     private String payment;

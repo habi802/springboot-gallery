@@ -2,8 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.wikibook.gallery.order.OrderMapper">
     <insert id="save" useGeneratedKeys="true" keyProperty="orderId">
-        INSERT into orders
-        SET member_id = #{memberId},
+        INSERT INTO orders
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="memberId != null and memberId != 0">
+                member_id = #{memberId},
+            </if>
+            <if test="guestId != null and guestId != ''">
+                guest_id = #{guestId},
+            </if>
             name = #{name},
             address = #{address},
             payment = #{payment},
@@ -11,6 +17,7 @@
                 card_number = #{cardNumber},
             </if>
             amount = #{amount}
+        </trim>
     </insert>
 
     <select id="findAllByMemberIdOrderByIdDesc">

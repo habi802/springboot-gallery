@@ -23,7 +23,7 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<?> add(@RequestBody OrderPostReq req, HttpServletRequest httpReq) {
-        int logginedMemberId = (int) HttpUtils.getSessionValue(httpReq, AccountConstants.MEMBER_ID_NAME);
+        Integer logginedMemberId = (Integer) HttpUtils.getSessionValue(httpReq, AccountConstants.MEMBER_ID_NAME);
         //log.info("req: {}", req);
         int result = orderService.saveOrder(req, logginedMemberId);
         return ResponseEntity.ok(result);

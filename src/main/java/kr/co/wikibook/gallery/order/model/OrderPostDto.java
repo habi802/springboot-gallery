@@ -9,7 +9,8 @@ import lombok.ToString;
 @ToString
 public class OrderPostDto {
     private int orderId;
-    private int memberId;
+    private Integer memberId;
+    private String guestId;
     private String name;
     private String address;
     private String payment;
