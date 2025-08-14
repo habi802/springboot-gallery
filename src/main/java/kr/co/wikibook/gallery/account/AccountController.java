@@ -5,7 +5,7 @@ import kr.co.wikibook.gallery.account.etc.AccountConstants;
 import kr.co.wikibook.gallery.account.model.AccountJoinReq;
 import kr.co.wikibook.gallery.account.model.AccountLoginReq;
 import kr.co.wikibook.gallery.account.model.AccountLoginRes;
-import kr.co.wikibook.gallery.common.util.HttpUtils;
+import kr.co.wikibook.gallery.config.util.HttpUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -55,5 +55,13 @@ public class AccountController {
     public ResponseEntity<?> logout(HttpServletRequest httpReq) {
         HttpUtils.removeSessionValue(httpReq, AccountConstants.MEMBER_ID_NAME);
         return ResponseEntity.ok(1);
+    }
+
+    // 카카오 로그인
+    @GetMapping("/kakao/callback")
+    public String kakaoCallback(@RequestParam String code) {
+        log.info("code: {}", code);
+
+        return "카카오 로그인";
     }
 }

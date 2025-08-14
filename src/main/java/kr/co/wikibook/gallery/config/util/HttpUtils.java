@@ -1,4 +1,4 @@
-package kr.co.wikibook.gallery.common.util;
+package kr.co.wikibook.gallery.config.util;
 
 import jakarta.servlet.http.HttpServletRequest;
 

@@ -5,7 +5,7 @@ import kr.co.wikibook.gallery.account.etc.AccountConstants;
 import kr.co.wikibook.gallery.cart.model.CartDeleteReq;
 import kr.co.wikibook.gallery.cart.model.CartGetRes;
 import kr.co.wikibook.gallery.cart.model.CartPostReq;
-import kr.co.wikibook.gallery.common.util.HttpUtils;
+import kr.co.wikibook.gallery.config.util.HttpUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

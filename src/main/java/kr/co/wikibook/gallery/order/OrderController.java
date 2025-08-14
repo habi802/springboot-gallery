@@ -2,7 +2,7 @@ package kr.co.wikibook.gallery.order;
 
 import jakarta.servlet.http.HttpServletRequest;
 import kr.co.wikibook.gallery.account.etc.AccountConstants;
-import kr.co.wikibook.gallery.common.util.HttpUtils;
+import kr.co.wikibook.gallery.config.util.HttpUtils;
 import kr.co.wikibook.gallery.order.model.OrderDetailGetReq;
 import kr.co.wikibook.gallery.order.model.OrderDetailGetRes;
 import kr.co.wikibook.gallery.order.model.OrderGetRes;
