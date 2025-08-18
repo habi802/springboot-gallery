@@ -11,4 +11,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ToString
 public class ConstKakao {
     private final String appKey;
+    private final String redirectUri;
 }

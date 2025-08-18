@@ -2,7 +2,8 @@ constants:
   file:
     directory: D:\SQL(04-14~)\backend\springboot\upload
   kakao-login:
-    url: https://kauth.kakao.com/oauth/token
+    url: https://kauth.kakao.com
+    redirect-uri: http://localhost:8080/api/v1/account/login/kakao
     app-key: bc1094840538736df46235314177d0b3
 
 spring:

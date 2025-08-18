@@ -59,8 +59,9 @@ public class AccountController {
 
     // 카카오 로그인
     @GetMapping("/login/kakao")
-    public String kakaoCallback(@RequestParam String code) {
+    public String kakaoLogin(@RequestParam String code) {
         log.info("code: {}", code);
+        accountService.kakaoLogin(code);
 
         return "카카오 로그인";
     }

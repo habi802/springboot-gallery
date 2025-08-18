@@ -1,16 +1,20 @@
 package kr.co.wikibook.gallery.account;
 
-import kr.co.wikibook.gallery.account.model.AccountJoinReq;
-import kr.co.wikibook.gallery.account.model.AccountLoginReq;
-import kr.co.wikibook.gallery.account.model.AccountLoginRes;
+import kr.co.wikibook.gallery.account.model.*;
+import kr.co.wikibook.gallery.config.constants.ConstKakao;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AccountService {
     private final AccountMapper accountMapper;
+
+    private final KakaoFeignClient kakaoFeignClient;
+    private final ConstKakao constKakao;
 
     public int join(AccountJoinReq req) {
         String hashedPw = BCrypt.hashpw(req.getLoginPw(), BCrypt.gensalt());
@@ -29,5 +33,12 @@ public class AccountService {
         }
 
         return res;
+    }
+
+    public void kakaoLogin(String code) {
+        KakaoTokenReq req = new KakaoTokenReq("authorization_code", constKakao.getAppKey(), constKakao.getRedirectUri(), code);
+        log.info("kakao login req: {}", req);
+        KakaoTokenResponse token = kakaoFeignClient.getToken(req);
+        log.info("token: {}", token);
     }
 }
