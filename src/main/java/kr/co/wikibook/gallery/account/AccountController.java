@@ -58,7 +58,7 @@ public class AccountController {
     }
 
     // 카카오 로그인
-    @GetMapping("/kakao/callback")
+    @GetMapping("/login/kakao")
     public String kakaoCallback(@RequestParam String code) {
         log.info("code: {}", code);
 
