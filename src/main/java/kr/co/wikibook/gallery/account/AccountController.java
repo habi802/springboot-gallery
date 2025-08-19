@@ -1,6 +1,7 @@
 package kr.co.wikibook.gallery.account;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import kr.co.wikibook.gallery.account.etc.AccountConstants;
 import kr.co.wikibook.gallery.account.model.AccountJoinReq;
 import kr.co.wikibook.gallery.account.model.AccountLoginReq;
@@ -11,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @Slf4j
 @RestController
@@ -47,7 +50,7 @@ public class AccountController {
     @GetMapping("/check")
     public ResponseEntity<?> check(HttpServletRequest httpReq) {
         Integer id = (Integer) HttpUtils.getSessionValue(httpReq, AccountConstants.MEMBER_ID_NAME);
-        log.info("id={}", id);
+        log.info("check id={}", id);
         return ResponseEntity.ok(id);
     }
 
@@ -59,11 +62,14 @@ public class AccountController {
 
     // 카카오 로그인
     @GetMapping("/login/kakao")
-    public ResponseEntity<?> kakaoLogin(@RequestParam String code) {
+    public void kakaoLogin(@RequestParam String code, HttpServletRequest httpReq, HttpServletResponse HttpRes) throws IOException {
         log.info("code: {}", code);
         int result = accountService.kakaoLogin(code);
         log.info("result: {}", result);
 
-        return ResponseEntity.ok(result);
+        // 세션 처리
+        HttpUtils.setSession(httpReq, AccountConstants.MEMBER_ID_NAME, result);
+
+        HttpRes.sendRedirect("http://localhost:5173/kakao-login-success?memberId=" + result);
     }
 }
