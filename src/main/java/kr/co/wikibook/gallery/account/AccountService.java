@@ -13,7 +13,8 @@ import org.springframework.stereotype.Service;
 public class AccountService {
     private final AccountMapper accountMapper;
 
-    private final KakaoFeignClient kakaoFeignClient;
+    private final KakaoTokenFeignClient kakaoTokenFeignClient;
+    private final KakaoUserFeignClient kakaoUserFeignClient;
     private final ConstKakao constKakao;
 
     public int join(AccountJoinReq req) {
@@ -38,7 +39,9 @@ public class AccountService {
     public void kakaoLogin(String code) {
         KakaoTokenReq req = new KakaoTokenReq("authorization_code", constKakao.getAppKey(), constKakao.getRedirectUri(), code);
         log.info("kakao login req: {}", req);
-        KakaoTokenResponse token = kakaoFeignClient.getToken(req);
-        log.info("token: {}", token);
+        KakaoTokenResponse kakaoToken = kakaoTokenFeignClient.getToken(req);
+        log.info("kakao token: {}", kakaoToken);
+        KakaoUserResponse kakaoUser = kakaoUserFeignClient.getUser(String.format("Bearer %s", kakaoToken.getAccessToken()));
+        log.info("kakao user: {}", kakaoUser);
     }
 }

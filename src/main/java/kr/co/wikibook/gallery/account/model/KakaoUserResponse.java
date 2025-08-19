@@ -2,7 +2,11 @@ package kr.co.wikibook.gallery.account.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.Getter;
+import lombok.ToString;
 
+@Getter
+@ToString
 public class KakaoUserResponse {
     private Long id;
     @JsonProperty("kakao_account")
@@ -11,7 +15,6 @@ public class KakaoUserResponse {
     @Data
     public static class KakaoAccount {
         private Profile profile;
-        private String email;
 
         @Data
         public static class Profile {
@@ -19,5 +22,7 @@ public class KakaoUserResponse {
             @JsonProperty("profile_image_url")
             private String profileImageUrl;
         }
+
+        private String email;
     }
 }
