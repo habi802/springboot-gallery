@@ -6,6 +6,12 @@ constants:
     user-uri: https://kapi.kakao.com
     redirect-uri: http://localhost:8080/api/v1/account/login/kakao
     app-key: bc1094840538736df46235314177d0b3
+  naver-login:
+    token-uri: https://nid.naver.com/oauth2.0/token
+    user-uri: https://openapi.naver.com/v1/nid/me
+    redirect-uri: http://localhost:8080/api/v1/account/login/naver
+    app-key: v9mW1kiC_wKvBqxqT9Jo
+    secret-key: NzS4_bvtOR
 
 spring:
   application:

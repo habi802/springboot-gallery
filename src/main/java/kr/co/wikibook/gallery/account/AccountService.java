@@ -2,6 +2,7 @@ package kr.co.wikibook.gallery.account;
 
 import kr.co.wikibook.gallery.account.model.*;
 import kr.co.wikibook.gallery.config.constants.ConstKakao;
+import kr.co.wikibook.gallery.config.constants.ConstNaver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mindrot.jbcrypt.BCrypt;
@@ -16,7 +17,10 @@ public class AccountService {
 
     private final KakaoTokenFeignClient kakaoTokenFeignClient;
     private final KakaoUserFeignClient kakaoUserFeignClient;
+    private final NaverTokenFeignClient naverTokenFeignClient;
+    private final NaverUserFeignClient naverUserFeignClient;
     private final ConstKakao constKakao;
+    private final ConstNaver constNaver;
 
     public int join(AccountJoinReq req) {
         String hashedPw = BCrypt.hashpw(req.getLoginPw(), BCrypt.gensalt());
@@ -45,13 +49,13 @@ public class AccountService {
     public Integer kakaoLogin(String code) {
         KakaoTokenReq req = new KakaoTokenReq("authorization_code", constKakao.getAppKey(), constKakao.getRedirectUri(), code);
         log.info("kakao login req: {}", req);
-        KakaoTokenResponse kakaoToken = kakaoTokenFeignClient.getToken(req);
+        KakaoTokenRes kakaoToken = kakaoTokenFeignClient.getToken(req);
         log.info("kakao token: {}", kakaoToken);
-        KakaoUserResponse kakaoUser = kakaoUserFeignClient.getUser(String.format("Bearer %s", kakaoToken.getAccessToken()));
+        KakaoUserRes kakaoUser = kakaoUserFeignClient.getUser(String.format("Bearer %s", kakaoToken.getAccessToken()));
         log.info("kakao user: {}", kakaoUser);
 
         SocialLoginDto dto = SocialLoginDto.builder()
-                .socialId(kakaoUser.getId())
+                .socialId(kakaoUser.getId().toString())
                 .loginId(kakaoUser.getKakaoAccount().getEmail())
                 .loginType("KAKAO")
                 .build();
@@ -74,5 +78,40 @@ public class AccountService {
         }
 
         return id;
+    }
+
+    @Transactional
+    public void naverLogin(String code) {
+        NaverTokenReq req = new NaverTokenReq("authorization_code", constNaver.getAppKey(), constNaver.getSecretKey(), code);
+        log.info("naver login req: {}", req);
+        NaverTokenRes naverToken = naverTokenFeignClient.getToken(req);
+        log.info("naver token: {}", naverToken);
+        NaverUserRes naverUser = naverUserFeignClient.getUser(String.format("Bearer %s", naverToken.getAccessToken()));
+        log.info("naver user: {}", naverUser);
+
+//        SocialLoginDto dto = SocialLoginDto.builder()
+//                .socialId(naverUser.getId())
+//                .loginId(naverUser.getKakaoAccount().getEmail())
+//                .loginType("NAVER")
+//                .build();
+//        log.info("social login dto: {}", dto);
+//
+//        Integer id = accountMapper.findBySocialIdAndLoginIdAndLoginType(dto);
+//        log.info("user id: {}", id);
+//
+//        if (id == null) {
+//            AccountJoinReq joinReq = AccountJoinReq.builder()
+//                    .name(naverUser.getKakaoAccount().getProfile().getNickname())
+//                    .loginId(dto.getLoginId())
+//                    .loginType("NAVER")
+//                    .socialId(dto.getSocialId())
+//                    .build();
+//
+//            accountMapper.save(joinReq);
+//
+//            return joinReq.getId();
+//        }
+//
+//        return id;
     }
 }

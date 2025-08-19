@@ -15,5 +15,5 @@ public class AccountJoinReq {
     private String loginId;
     private String loginPw;
     private String loginType;
-    private long socialId;
+    private String socialId;
 }

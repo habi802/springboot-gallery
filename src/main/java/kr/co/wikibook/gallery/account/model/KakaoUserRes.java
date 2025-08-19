@@ -7,7 +7,7 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public class KakaoUserResponse {
+public class KakaoUserRes {
     private Long id;
     @JsonProperty("kakao_account")
     private KakaoAccount kakaoAccount;

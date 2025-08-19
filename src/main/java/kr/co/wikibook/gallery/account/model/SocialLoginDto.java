@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 public class SocialLoginDto {
-    private long socialId;
+    private String socialId;
     private String loginId;
     private String loginType;
 }

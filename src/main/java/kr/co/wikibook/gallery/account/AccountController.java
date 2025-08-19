@@ -72,4 +72,17 @@ public class AccountController {
 
         HttpRes.sendRedirect("http://localhost:5173/kakao-login-success?memberId=" + result);
     }
+
+    // 네이버 로그인
+    @GetMapping("/login/naver")
+    public void naverLogin(@RequestParam String code, HttpServletRequest httpReq, HttpServletResponse HttpRes) throws IOException {
+        log.info("code: {}", code);
+        accountService.naverLogin(code);
+        //log.info("result: {}", result);
+
+        // 세션 처리
+//        HttpUtils.setSession(httpReq, AccountConstants.MEMBER_ID_NAME, result);
+//
+//        HttpRes.sendRedirect("http://localhost:5173/naver-login-success?memberId=" + result);
+    }
 }
