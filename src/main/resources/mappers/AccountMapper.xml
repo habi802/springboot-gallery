@@ -1,16 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.wikibook.gallery.account.AccountMapper">
-    <insert id="save">
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO members
-        SET name = #{name},
+        <trim prefix="SET" suffixOverrides=",">
+            name = #{name},
             login_id = #{loginId},
-            login_pw = #{loginPw}
+            <if test="loginPw != null and loginPw != ''">
+                login_pw = #{loginPw},
+            </if>
+            <if test="loginType != null and loginType != ''">
+                login_type = #{loginType},
+            </if>
+            <if test="socialId != null">
+                social_id = ${socialId}
+            </if>
+        </trim>
     </insert>
 
     <select id="findByLoginId">
         SELECT id, login_pw
         FROM members
         WHERE login_id = #{loginId}
+        AND login_type = 'LOCAL'
+    </select>
+
+    <select id="findBySocialIdAndLoginIdAndLoginType">
+        SELECT id
+        FROM members
+        WHERE social_id = ${socialId}
+        AND login_id = #{loginId}
+        AND login_type = #{loginType}
     </select>
 </mapper>

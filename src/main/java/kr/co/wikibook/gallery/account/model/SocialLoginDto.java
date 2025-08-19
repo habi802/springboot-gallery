@@ -1,0 +1,14 @@
+package kr.co.wikibook.gallery.account.model;
+
+import lombok.*;
+
+@Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+public class SocialLoginDto {
+    private long socialId;
+    private String loginId;
+    private String loginType;
+}

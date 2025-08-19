@@ -59,10 +59,11 @@ public class AccountController {
 
     // 카카오 로그인
     @GetMapping("/login/kakao")
-    public String kakaoLogin(@RequestParam String code) {
+    public ResponseEntity<?> kakaoLogin(@RequestParam String code) {
         log.info("code: {}", code);
-        accountService.kakaoLogin(code);
+        int result = accountService.kakaoLogin(code);
+        log.info("result: {}", result);
 
-        return "카카오 로그인";
+        return ResponseEntity.ok(result);
     }
 }
