@@ -3,11 +3,12 @@ package kr.co.wikibook.gallery.account;
 import kr.co.wikibook.gallery.account.model.NaverTokenReq;
 import kr.co.wikibook.gallery.account.model.NaverTokenRes;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.cloud.openfeign.SpringQueryMap;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @FeignClient(name = "naver-token", url = "${constants.naver-login.token-uri}")
 public interface NaverTokenFeignClient {
-    @GetMapping
-    NaverTokenRes getToken(@ModelAttribute NaverTokenReq req);
+    @PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    NaverTokenRes getToken(@SpringQueryMap NaverTokenReq req);
 }

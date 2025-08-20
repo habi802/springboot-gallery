@@ -81,7 +81,7 @@ public class AccountService {
     }
 
     @Transactional
-    public void naverLogin(String code) {
+    public Integer naverLogin(String code) {
         NaverTokenReq req = new NaverTokenReq("authorization_code", constNaver.getAppKey(), constNaver.getSecretKey(), code);
         log.info("naver login req: {}", req);
         NaverTokenRes naverToken = naverTokenFeignClient.getToken(req);
@@ -89,29 +89,29 @@ public class AccountService {
         NaverUserRes naverUser = naverUserFeignClient.getUser(String.format("Bearer %s", naverToken.getAccessToken()));
         log.info("naver user: {}", naverUser);
 
-//        SocialLoginDto dto = SocialLoginDto.builder()
-//                .socialId(naverUser.getId())
-//                .loginId(naverUser.getKakaoAccount().getEmail())
-//                .loginType("NAVER")
-//                .build();
-//        log.info("social login dto: {}", dto);
-//
-//        Integer id = accountMapper.findBySocialIdAndLoginIdAndLoginType(dto);
-//        log.info("user id: {}", id);
-//
-//        if (id == null) {
-//            AccountJoinReq joinReq = AccountJoinReq.builder()
-//                    .name(naverUser.getKakaoAccount().getProfile().getNickname())
-//                    .loginId(dto.getLoginId())
-//                    .loginType("NAVER")
-//                    .socialId(dto.getSocialId())
-//                    .build();
-//
-//            accountMapper.save(joinReq);
-//
-//            return joinReq.getId();
-//        }
-//
-//        return id;
+        SocialLoginDto dto = SocialLoginDto.builder()
+                .socialId(naverUser.getResponse().getId())
+                .loginId(naverUser.getResponse().getEmail())
+                .loginType("NAVER")
+                .build();
+        log.info("social login dto: {}", dto);
+
+        Integer id = accountMapper.findBySocialIdAndLoginIdAndLoginType(dto);
+        log.info("user id: {}", id);
+
+        if (id == null) {
+            AccountJoinReq joinReq = AccountJoinReq.builder()
+                    .name(naverUser.getResponse().getName())
+                    .loginId(dto.getLoginId())
+                    .loginType("NAVER")
+                    .socialId(dto.getSocialId())
+                    .build();
+
+            accountMapper.save(joinReq);
+
+            return joinReq.getId();
+        }
+
+        return id;
     }
 }

@@ -1,22 +1,20 @@
 package kr.co.wikibook.gallery.account.model;
 
+import feign.Param;
 import lombok.*;
 
-import java.beans.ConstructorProperties;
 
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @ToString
 public class NaverTokenReq {
+    @Param("grant_type")
     private String grantType;
+    @Param("client_id")
     private String clientId;
+    @Param("client_secret")
     private String clientSecret;
     private String code;
-
-    @ConstructorProperties({"grant_type", "client_id", "client_secret", "code"})
-    public NaverTokenReq(String grantType, String clientId, String clientSecret, String code) {
-        this.grantType = grantType;
-        this.clientId = clientId;
-        this.clientSecret = clientSecret;
-        this.code = code;
-    }
 }
