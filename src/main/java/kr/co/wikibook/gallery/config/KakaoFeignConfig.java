@@ -1,4 +1,4 @@
-package kr.co.wikibook.gallery.application.config;
+package kr.co.wikibook.gallery.config;
 
 import feign.RequestInterceptor;
 import org.springframework.context.annotation.Bean;

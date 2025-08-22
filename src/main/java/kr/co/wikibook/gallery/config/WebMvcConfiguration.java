@@ -1,4 +1,4 @@
-package kr.co.wikibook.gallery.application.config;
+package kr.co.wikibook.gallery.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,4 +1,4 @@
-package kr.co.wikibook.gallery.application.config.constants;
+package kr.co.wikibook.gallery.config.constants;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
