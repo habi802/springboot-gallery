@@ -15,5 +15,6 @@ public class OrderPostDto {
     private String address;
     private String payment;
     private String cardNumber;
+    private String kakaoTid;
     private long amount;
 }

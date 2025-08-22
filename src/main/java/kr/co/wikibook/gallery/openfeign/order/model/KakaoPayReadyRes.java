@@ -6,7 +6,7 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public class KakaoPayTokenRes {
+public class KakaoPayReadyRes {
     private String tid;
     @JsonProperty("next_redirect_pc_url")
     private String nextUrl;

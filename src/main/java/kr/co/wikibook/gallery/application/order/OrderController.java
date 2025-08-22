@@ -4,7 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import kr.co.wikibook.gallery.application.account.etc.AccountConstants;
 import kr.co.wikibook.gallery.config.util.HttpUtils;
 import kr.co.wikibook.gallery.application.order.model.*;
-import kr.co.wikibook.gallery.openfeign.order.model.KakaoPayTokenRes;
+import kr.co.wikibook.gallery.openfeign.order.model.KakaoPayReadyRes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -47,8 +47,7 @@ public class OrderController {
     @PostMapping("/kakao")
     public ResponseEntity<?> getKakaoPayToken(HttpServletRequest httpReq, @RequestBody OrderTempReq req) {
         int logginedMemberId = (int) HttpUtils.getSessionValue(httpReq, AccountConstants.MEMBER_ID_NAME);
-        KakaoPayTokenRes result = orderService.getKakaoPayToken(logginedMemberId, req);
-
-        return null;
+        KakaoPayReadyRes result = orderService.getKakaoPayToken(logginedMemberId, req);
+        return ResponseEntity.ok(result);
     }
 }

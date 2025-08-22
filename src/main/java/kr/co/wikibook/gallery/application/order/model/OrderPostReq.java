@@ -13,5 +13,6 @@ public class OrderPostReq {
     private String address;
     private String payment;
     private String cardNumber;
+    private String kakaoTid;
     private List<Integer> itemIds;
 }
