@@ -12,6 +12,9 @@ constants:
     redirect-uri: http://localhost:8080/api/v1/account/login/naver
     app-key: v9mW1kiC_wKvBqxqT9Jo
     secret-key: NzS4_bvtOR
+  kakao-pay:
+    token-uri: https://open-api.kakaopay.com/online/v1/payment/ready
+    secret-key: DEV82F87B8EECEEF87CB48A2F6E3E401272F06EB
 
 spring:
   application:

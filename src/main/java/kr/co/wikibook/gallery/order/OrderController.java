@@ -3,10 +3,7 @@ package kr.co.wikibook.gallery.order;
 import jakarta.servlet.http.HttpServletRequest;
 import kr.co.wikibook.gallery.account.etc.AccountConstants;
 import kr.co.wikibook.gallery.config.util.HttpUtils;
-import kr.co.wikibook.gallery.order.model.OrderDetailGetReq;
-import kr.co.wikibook.gallery.order.model.OrderDetailGetRes;
-import kr.co.wikibook.gallery.order.model.OrderGetRes;
-import kr.co.wikibook.gallery.order.model.OrderPostReq;
+import kr.co.wikibook.gallery.order.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -44,5 +41,13 @@ public class OrderController {
         req.setMemberId(logginedMemberId);
         OrderDetailGetRes result = orderService.detail(req);
         return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/kakao")
+    public ResponseEntity<?> getKakaoPayToken(HttpServletRequest httpReq, @RequestBody OrderTempReq req) {
+        int logginedMemberId = (int) HttpUtils.getSessionValue(httpReq, AccountConstants.MEMBER_ID_NAME);
+        KakaoPayTokenRes result = orderService.getKakaoPayToken(logginedMemberId, req);
+
+        return null;
     }
 }

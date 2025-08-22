@@ -68,4 +68,16 @@ public class OrderService {
         //log.info("result:{}", result);
         return result;
     }
+
+    public KakaoPayTokenRes getKakaoPayToken(int memberId, OrderTempReq req) {
+        OrderTempDto dto = OrderTempDto.builder()
+                .memberId(memberId)
+                .guestId(req.getGuestId())
+                .address(req.getAddress())
+                .payment(req.getPayment())
+                .cardNumber(req.getCardNumber())
+                .build();
+
+        return null;
+    }
 }
