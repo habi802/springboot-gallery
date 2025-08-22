@@ -8,23 +8,15 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class KakaoPayReadyReq {
+public class KakaoPayApproveReq {
     private String cid;
+    private String tid;
     @JsonProperty("partner_order_id")
     private String orderId;
     @JsonProperty("partner_user_id")
     private String userId;
-    @JsonProperty("item_name")
-    private String itemName;
-    private String quantity;
+    @JsonProperty("pg_token")
+    private String pgToken;
     @JsonProperty("total_amount")
     private String amount;
-    @JsonProperty("tax_free_amount")
-    private String taxFreeAmount;
-    @JsonProperty("approval_url")
-    private String approvalUrl;
-    @JsonProperty("fail_url")
-    private String failUrl;
-    @JsonProperty("cancel_url")
-    private String cancelUrl;
 }

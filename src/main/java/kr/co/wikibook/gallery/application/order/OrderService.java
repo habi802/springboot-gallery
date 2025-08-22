@@ -4,7 +4,9 @@ import kr.co.wikibook.gallery.application.cart.CartMapper;
 import kr.co.wikibook.gallery.application.item.ItemMapper;
 import kr.co.wikibook.gallery.application.item.model.ItemGetRes;
 import kr.co.wikibook.gallery.application.order.model.*;
-import kr.co.wikibook.gallery.openfeign.order.KakaoPayReadyFeignClient;
+import kr.co.wikibook.gallery.config.constants.ConstKakaoPay;
+import kr.co.wikibook.gallery.openfeign.order.KakaoPayFeignClient;
+import kr.co.wikibook.gallery.openfeign.order.model.KakaoPayApproveReq;
 import kr.co.wikibook.gallery.openfeign.order.model.KakaoPayReadyReq;
 import kr.co.wikibook.gallery.openfeign.order.model.KakaoPayReadyRes;
 import lombok.RequiredArgsConstructor;
@@ -25,21 +27,47 @@ public class OrderService {
     private final ItemMapper itemMapper;
     private final CartMapper cartMapper;
 
-    private final KakaoPayReadyFeignClient kakaoPayTokenFeignClient;
+    private final KakaoPayFeignClient kakaoPayTokenFeignClient;
+
+    private final ConstKakaoPay constKakaoPay;
 
     @Transactional
-    public int saveOrder(OrderPostReq req, Integer logginedMemberId) {
+    public int saveOrder(OrderPostReq req, Integer memberId) {
         int amount = calculateAmount(req.getItemIds());
 
         OrderPostDto orderDto = OrderPostDto.builder()
-                .memberId(logginedMemberId)
+                .memberId(memberId)
                 .guestId(req.getGuestId())
                 .name(req.getName())
                 .address(req.getAddress())
                 .payment(req.getPayment())
                 .cardNumber(req.getCardNumber())
+                .kakaoTid(req.getKakaoTid())
                 .amount(amount)
                 .build();
+
+        if ("kakao".equals(req.getPayment())) {
+            KakaoPayApproveReq payApproveReq = KakaoPayApproveReq.builder()
+                    .cid("TC0ONETIME")
+                    .tid(req.getKakaoTid())
+                    .orderId(req.getOrderId())
+                    .userId(memberId != null ? String.valueOf(memberId) : req.getGuestId())
+                    .pgToken(req.getPgToken())
+                    .amount(String.valueOf(amount))
+                    .build();
+
+            kakaoPayTokenFeignClient.approve(
+                String.format("SECRET_KEY %s", constKakaoPay.getSecretKey()),
+                payApproveReq
+            );
+
+            OrderTempUpdateDto tempUpdateDto = OrderTempUpdateDto.builder()
+                    .uuid(req.getOrderId())
+                    .status("COMPLETED")
+                    .build();
+
+            orderTempMapper.updateStatusByUuid(tempUpdateDto);
+        }
 
         //log.info("beforeOrderDto:{}", orderDto);
         orderMapper.save(orderDto);
@@ -48,8 +76,8 @@ public class OrderService {
         OrderItemPostDto orderItemDto = new OrderItemPostDto(orderDto.getOrderId(), req.getItemIds());
         orderItemMapper.save(orderItemDto);
 
-        if (logginedMemberId != null) {
-            cartMapper.deleteByMemberId(logginedMemberId);
+        if (memberId != null) {
+            cartMapper.deleteByMemberId(memberId);
         }
 
         return 1;
@@ -66,7 +94,7 @@ public class OrderService {
     }
 
     @Transactional
-    public KakaoPayReadyRes getKakaoPayToken(int memberId, OrderTempReq req) {
+    public KakaoPayReadyRes getKakaoPayToken(Integer memberId, OrderTempReq req) {
         String uuid = UUID.randomUUID().toString();
 
         int amount = calculateAmount(req.getItemIds());
@@ -84,20 +112,23 @@ public class OrderService {
 
         orderTempMapper.save(dto);
 
-        KakaoPayReadyReq tokenReq = KakaoPayReadyReq.builder()
+        KakaoPayReadyReq payReadyReq = KakaoPayReadyReq.builder()
                 .cid("TC0ONETIME")
-                .partnerOrderId(uuid)
-                .partnerUserId(String.valueOf(memberId))
+                .orderId(uuid)
+                .userId(memberId != null ? String.valueOf(memberId) : dto.getGuestId())
                 .itemName("Gallery")
                 .quantity("1")
-                .totalAmount(String.valueOf(amount))
+                .amount(String.valueOf(amount))
                 .taxFreeAmount("0")
-                .approvalUrl("http://localhost:5173")
-                .failUrl("http://localhost:5173")
-                .cancelUrl("http://localhost:5173")
+                .approvalUrl(String.format("http://localhost:5173/pay-ready-result?result=APPROVE&order_id=%s", uuid))
+                .failUrl("http://localhost:5173/pay-ready-result?result=FAIL")
+                .cancelUrl("http://localhost:5173/pay-ready-result?result=CANCEL")
                 .build();
 
-        KakaoPayReadyRes result = kakaoPayTokenFeignClient.getToken(tokenReq);
+        KakaoPayReadyRes result = kakaoPayTokenFeignClient.ready(
+            String.format("SECRET_KEY %s", constKakaoPay.getSecretKey()),
+            payReadyReq
+        );
         log.info("kakao pay Ready result: {}", result);
         return result;
     }

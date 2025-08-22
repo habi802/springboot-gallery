@@ -46,8 +46,9 @@ public class OrderController {
 
     @PostMapping("/kakao")
     public ResponseEntity<?> getKakaoPayToken(HttpServletRequest httpReq, @RequestBody OrderTempReq req) {
-        int logginedMemberId = (int) HttpUtils.getSessionValue(httpReq, AccountConstants.MEMBER_ID_NAME);
+        Integer logginedMemberId = (Integer) HttpUtils.getSessionValue(httpReq, AccountConstants.MEMBER_ID_NAME);
         KakaoPayReadyRes result = orderService.getKakaoPayToken(logginedMemberId, req);
+        log.info("kakao get token result: {}", result);
         return ResponseEntity.ok(result);
     }
 }

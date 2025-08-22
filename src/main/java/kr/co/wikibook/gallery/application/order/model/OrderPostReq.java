@@ -15,4 +15,6 @@ public class OrderPostReq {
     private String cardNumber;
     private String kakaoTid;
     private List<Integer> itemIds;
+    private String orderId;
+    private String pgToken;
 }

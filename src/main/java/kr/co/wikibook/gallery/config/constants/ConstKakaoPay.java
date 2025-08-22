@@ -6,10 +6,9 @@ import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Getter
-@ConfigurationProperties(prefix = "constants.kakao-login")
+@ConfigurationProperties(prefix = "constants.kakao-pay")
 @RequiredArgsConstructor
 @ToString
-public class ConstKakao {
-    private final String appKey;
-    private final String redirectUri;
+public class ConstKakaoPay {
+    private final String secretKey;
 }

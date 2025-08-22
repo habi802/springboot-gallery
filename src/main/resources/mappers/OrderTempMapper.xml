@@ -23,4 +23,10 @@
             amount = #{amount}
         </trim>
     </insert>
+
+    <update id="updateStatusByUuid">
+        UPDATE orders_temp
+        SET status = #{status}
+        WHERE uuid = #{uuid}
+    </update>
 </mapper>

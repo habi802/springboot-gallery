@@ -1,7 +1,7 @@
 package kr.co.wikibook.gallery.application.account;
 
 import kr.co.wikibook.gallery.application.account.model.*;
-import kr.co.wikibook.gallery.config.constants.ConstKakao;
+import kr.co.wikibook.gallery.config.constants.ConstKakaoLogin;
 import kr.co.wikibook.gallery.config.constants.ConstNaver;
 import kr.co.wikibook.gallery.openfeign.account.KakaoTokenFeignClient;
 import kr.co.wikibook.gallery.openfeign.account.KakaoUserFeignClient;
@@ -24,7 +24,7 @@ public class AccountService {
     private final KakaoUserFeignClient kakaoUserFeignClient;
     private final NaverTokenFeignClient naverTokenFeignClient;
     private final NaverUserFeignClient naverUserFeignClient;
-    private final ConstKakao constKakao;
+    private final ConstKakaoLogin constKakao;
     private final ConstNaver constNaver;
 
     public int join(AccountJoinReq req) {
@@ -55,7 +55,7 @@ public class AccountService {
         KakaoTokenReq req = new KakaoTokenReq("authorization_code", constKakao.getAppKey(), constKakao.getRedirectUri(), code);
         log.info("kakao login req: {}", req);
         KakaoTokenRes kakaoToken = kakaoTokenFeignClient.getToken(req);
-        log.info("kakao token: {}", kakaoToken);
+        log.info("kakao token: {}", kakaoToken.getAccessToken());
         KakaoUserRes kakaoUser = kakaoUserFeignClient.getUser(String.format("Bearer %s", kakaoToken.getAccessToken()));
         log.info("kakao user: {}", kakaoUser);
 
