@@ -23,6 +23,20 @@ spring:
     url: jdbc:mariadb://localhost/gallery
     username: root
     password: green502
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: shb8002@gmail.com
+    password: xvox ybhd desb rivj
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          ssl:
+            trust: smtp.gmail.com
+            protocols: TLSv1.2
 
 mybatis:
   configuration:

@@ -1,5 +1,8 @@
 package kr.co.wikibook.gallery.application.account;
 
+import jakarta.mail.internet.MimeMessage;
+import kr.co.wikibook.gallery.application.account.etc.AuthCode;
+import kr.co.wikibook.gallery.application.account.etc.MailCheck;
 import kr.co.wikibook.gallery.application.account.model.*;
 import kr.co.wikibook.gallery.config.constants.ConstKakaoLogin;
 import kr.co.wikibook.gallery.config.constants.ConstNaver;
@@ -11,8 +14,14 @@ import kr.co.wikibook.gallery.openfeign.account.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 @Slf4j
 @Service
@@ -27,7 +36,11 @@ public class AccountService {
     private final ConstKakaoLogin constKakao;
     private final ConstNaver constNaver;
 
-    public int join(AccountJoinReq req) {
+    private final JavaMailSender mailSender;
+    public static Map<String, String> codes = new HashMap<>();
+    public static Map<String, Boolean> mailChecked = new HashMap<>();
+
+    public Integer join(AccountJoinReq req) {
         String hashedPw = BCrypt.hashpw(req.getLoginPw(), BCrypt.gensalt());
 
         // 암호화가 된 비밀번호를 갖는 AccountJoinReq 객체를 만들어주세요. (아이디, 이름도 갖고 있고)
@@ -36,6 +49,11 @@ public class AccountService {
                 .loginId(req.getLoginId())
                 .loginPw(hashedPw)
                 .build();
+
+        if (!mailChecked.getOrDefault(req.getLoginId(), false)) {
+            return null;
+        }
+
         return accountMapper.save(changedReq);
     }
 
@@ -118,5 +136,53 @@ public class AccountService {
         }
 
         return id;
+    }
+
+    public Integer sendVerifyCode(String email) {
+        // 인증코드(4자리) 생성
+        String code = String.valueOf(new Random().nextInt(9000) + 1000);
+        codes.put(email, code);
+
+        // 인증코드 유지 시간(5분) 설정
+        new Thread(new AuthCode(email)).start();
+
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            helper.setFrom("from", "Gallery");
+            helper.setTo(email);
+            helper.setSubject("Gallery 이메일 인증 코드 안내");
+
+            String htmlContent = "<div style='font-family:Arial,sans-serif; padding:20px;'>" +
+                    "<h2 style='color:#4CAF50;'>이메일 인증</h2>" +
+                    "<p>인증 코드는 아래와 같습니다:</p>" +
+                    "<h1 style='color:#FF5722;'>" + code + "</h1>" +
+                    "<p style='font-size:12px; color:gray;'>5분 내 입력해주세요.</p>" +
+                    "</div>";
+            helper.setText(htmlContent, true);
+
+            mailSender.send(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return 1;
+    }
+
+    public Integer checkVerifyCode(VerifyCodeReq req) {
+        String savedCode = codes.getOrDefault(req.getEmail(), "");
+
+        if (!savedCode.equals(req.getCode())) {
+            return null;
+        }
+
+        codes.remove(req.getEmail());
+        mailChecked.put(req.getEmail(), true);
+
+        new Thread(new MailCheck(req.getEmail())).start();
+
+        return 1;
     }
 }
