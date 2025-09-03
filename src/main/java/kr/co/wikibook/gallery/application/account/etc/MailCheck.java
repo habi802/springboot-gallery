@@ -10,6 +10,7 @@ public class MailCheck implements Runnable {
         this.email = email;
     }
 
+    // 스레드를 5분 동안 일시 정지
     public void run() {
         try {
             Thread.sleep(300_000);

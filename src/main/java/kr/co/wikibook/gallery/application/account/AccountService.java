@@ -139,14 +139,15 @@ public class AccountService {
     }
 
     public Integer sendVerifyCode(String email) {
-        // 인증코드(4자리) 생성
+        // 인증 번호(4자리) 생성
         String code = String.valueOf(new Random().nextInt(9000) + 1000);
         codes.put(email, code);
 
-        // 인증코드 유지 시간(5분) 설정
+        // 인증 번호 유지 시간(5분) 설정
         new Thread(new AuthCode(email)).start();
 
         try {
+            // 메일 전송
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
@@ -172,15 +173,20 @@ public class AccountService {
     }
 
     public Integer checkVerifyCode(VerifyCodeReq req) {
+        // 입력한 메일의 인증 번호를 가져옴
+        // getOrDefault: 첫 번째 인자의 값이 null이면 두 번째 인자를 return
         String savedCode = codes.getOrDefault(req.getEmail(), "");
 
+        // 입력한 인증 번호와 일치하지 않을 경우
         if (!savedCode.equals(req.getCode())) {
             return null;
         }
 
+        // 입력한 인증 번호와 일치할 경우
         codes.remove(req.getEmail());
         mailChecked.put(req.getEmail(), true);
 
+        // 해당 메일에 대한 인증 확인 유지 시간(5분) 설정
         new Thread(new MailCheck(req.getEmail())).start();
 
         return 1;
